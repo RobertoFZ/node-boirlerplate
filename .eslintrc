@@ -1,0 +1,29 @@
+{
+  "parser": "@typescript-eslint/parser",
+  "extends": [
+    "plugin:@typescript-eslint/recommended"
+  ],
+  "parserOptions": {
+    "ecmaVersion": 2018,
+    "project": "./tsconfig.json",
+    "sourceType": "module"
+  },
+  "rules": {
+    "semi": [
+      "error",
+      "never"
+    ],
+    "@typescript-eslint/semi": "off",
+    "max-len": [
+      "error",
+      {
+        "code": 80
+      }
+    ],
+    "indent": [
+      2,
+      "tab"
+    ],
+    "no-tabs": 0
+  }
+}

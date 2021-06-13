@@ -1,0 +1,22 @@
+{
+   "compilerOptions": {
+      "module": "commonjs",
+      "moduleResolution": "node",
+      "pretty": true,
+      "target": "es6",
+      "outDir": "./dist",
+      "baseUrl": "./src"
+   },
+   "paths": {
+      "@config/*": [
+         "src/config/*"
+      ]
+   },
+   "include": [
+      "src/**/*.ts",
+      "src/server.ts"
+   ],
+   "exclude": [
+      "node_modules"
+   ]
+}
