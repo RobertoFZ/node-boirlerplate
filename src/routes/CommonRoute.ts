@@ -5,7 +5,8 @@ const CommonRoutes = (app: Application): void => {
 		'*',
 		(req: Request, res: Response): Response =>
 			res
-				.status(404).send({ error: true, message: 'Check your URL please' }),
+				.status(404)
+				.send({ error: true, message: 'Check your URL please' }),
 	)
 }
 
