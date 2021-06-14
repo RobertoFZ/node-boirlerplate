@@ -6,34 +6,26 @@ export enum EResponseCodes {
   internalServerError = 500
 }
 
-export function successResponse(message: string, DATA: any, res: Response) {
+export function successResponse(message: string, data: any, res: Response) {
   res.status(EResponseCodes.success).json({
-    STATUS: 'SUCCESS',
-    MESSAGE: message,
-    DATA
+    status: 'SUCCESS',
+    message,
+    data
   });
 }
 
-export function failureResponse(message: string, DATA: any, res: Response) {
+export function failureResponse(message: string, data: any, res: Response) {
   res.status(EResponseCodes.success).json({
-    STATUS: 'FAILURE',
-    MESSAGE: message,
-    DATA
+    status: 'FAILURE',
+    message,
+    data
   });
 }
 
 export function insufficientParameters(res: Response) {
   res.status(EResponseCodes.badRequest).json({
-    STATUS: 'FAILURE',
-    MESSAGE: 'Insufficient parameters',
-    DATA: {}
-  });
-}
-
-export function mongoError(err: any, res: Response) {
-  res.status(EResponseCodes.internalServerError).json({
-    STATUS: 'FAILURE',
-    MESSAGE: 'MongoDB error',
-    DATA: err
+    status: 'FAILURE',
+    message: 'Insufficient parameters',
+    data: {}
   });
 }

@@ -1,6 +1,7 @@
 import { Request, Response, Router } from 'express'
 import express from 'express'
 import { successResponse } from 'modules/common/service'
+import { User } from 'models/User'
 
 class UserController {
 	private router: Router
@@ -16,14 +17,16 @@ class UserController {
 		return this.router
 	}
 	async find(req: Request, res: Response): Promise<void> {
-		return successResponse('Users list', [{ name: 'Test' }], res)
+		const users = await User.find()
+		return successResponse('Users list', users, res)
 	}
 	async create(req: Request, res: Response): Promise<void> {
-		return successResponse(
-			'User created successful',
-			{ name: 'Test' },
-			res,
-		)
+		const user = new User()
+		user.firstName = 'Timber'
+		user.lastName = 'Saw'
+		await user.save()
+
+		return successResponse('User created successful', user, res)
 	}
 }
 

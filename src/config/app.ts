@@ -1,16 +1,23 @@
-import express from 'express'
+import express, { Application } from 'express'
 import * as bodyParser from 'body-parser'
+import 'reflect-metadata'
 import CommonRoutes from 'routes/CommonRoute'
 import apiV1 from 'routes/v1'
+import connection from './database'
 
 class App {
 	public app: express.Application
 
-	constructor() {
-		this.app = express()
-		this.config()
-		this.app.use('/api/v1', apiV1())
-		CommonRoutes(this.app)
+	public async init(): Promise<void | Application> {
+		return connection
+			.then(() => {
+				this.app = express()
+				this.config()
+				this.app.use('/api/v1', apiV1())
+				CommonRoutes(this.app)
+				return this.app
+			})
+			.catch((error) => console.log(error))
 	}
 
 	private config(): void {
@@ -21,4 +28,4 @@ class App {
 	}
 }
 
-export default new App().app
+export default new App()
