@@ -1,4 +1,7 @@
 import { Entity, Column } from 'typeorm'
+import { IsNotEmpty } from 'class-validator'
+import bcrypt from 'bcryptjs'
+import { EUserRoles } from 'types/User'
 import { Model } from './Model'
 
 @Entity('User')
@@ -11,4 +14,19 @@ export class User extends Model {
 
 	@Column({ unique: true })
 	email: string
+
+	@Column()
+	@IsNotEmpty()
+	role: EUserRoles
+
+	@Column()
+	password: string
+
+	hashPassword(): void {
+		this.password = bcrypt.hashSync(this.password, 8)
+	}
+
+	checkIfUnencryptedPasswordIsValid(unencryptedPassword: string): boolean {
+		return bcrypt.compareSync(unencryptedPassword, this.password)
+	}
 }

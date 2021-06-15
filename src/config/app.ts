@@ -1,6 +1,8 @@
 import express, { Application } from 'express'
-import * as bodyParser from 'body-parser'
+import bodyParser from 'body-parser'
 import 'reflect-metadata'
+import helmet from 'helmet'
+import cors from 'cors'
 import CommonRoutes from 'routes/CommonRoute'
 import apiV1 from 'routes/v1'
 import connection from './database'
@@ -21,6 +23,10 @@ class App {
 	}
 
 	private config(): void {
+		// Allow cors
+		this.app.use(cors())
+		// To add useful HTTP headers
+		this.app.use(helmet())
 		// support application/json type post data
 		this.app.use(bodyParser.json())
 		// support application/x-www-form-urlencoded post data
