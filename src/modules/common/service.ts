@@ -36,7 +36,7 @@ export function failureResponse(
 	data: any,
 	res: Response,
 ) {
-	res.status(EResponseCodes.success).json({
+	res.status(EResponseCodes.internalServerError).json({
 		status: 'Failure',
 		message,
 		data,

@@ -14,6 +14,7 @@
     "typeorm": "ts-node -r tsconfig-paths/register ./node_modules/typeorm/cli.js",
     "db:revert": "npm run typeorm migration:revert",
     "db:migrate": "npm run typeorm migration:run",
+    "db:reset": "npm run db:revert && npm run db:migrate",
     "jwt:secret": "node -e \"console.log(require('crypto').randomBytes(64).toString('base64'));\""
   },
   "husky": {

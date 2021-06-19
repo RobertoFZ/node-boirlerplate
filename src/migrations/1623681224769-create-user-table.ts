@@ -1,4 +1,5 @@
 import { MigrationInterface, QueryRunner, Table } from 'typeorm'
+import { EUserRoles } from 'types/User'
 
 export class createUserTable1623681224769 implements MigrationInterface {
 	name = 'createUserTable1623681224769'
@@ -30,7 +31,9 @@ export class createUserTable1623681224769 implements MigrationInterface {
 					},
 					{
 						name: 'role',
-						type: 'varchar',
+						type: 'enum',
+						enum: Object.values(EUserRoles),
+						default: `'${EUserRoles.user}'`
 					},
 					{
 						name: 'password',

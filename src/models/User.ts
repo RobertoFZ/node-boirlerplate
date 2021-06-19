@@ -15,11 +15,14 @@ export class User extends Model {
 	@Column({ unique: true })
 	email: string
 
-	@Column()
-	@IsNotEmpty()
+	@Column({
+		type: 'enum',
+		enum: EUserRoles,
+		default: EUserRoles.user,
+	})
 	role: EUserRoles
 
-	@Column()
+	@Column({ select: false })
 	password: string
 
 	hashPassword(): void {

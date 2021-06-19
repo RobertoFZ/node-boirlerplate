@@ -1,7 +1,6 @@
 import { Request, Response, NextFunction } from 'express'
 import { User } from 'models/User'
-import { getRepository } from 'typeorm'
-import { EResponseCodes, unauthorizedResponse } from './service'
+import { unauthorizedResponse } from './service'
 
 const validateRole = (roles: Array<string>) => {
 	return async (req: Request, res: Response, next: NextFunction) => {
@@ -9,10 +8,9 @@ const validateRole = (roles: Array<string>) => {
 		const id = res.locals.jwtPayload.userId
 
 		//Get user role from the database
-		const userRepository = getRepository(User)
 		let user: User
 		try {
-			user = await userRepository.findOneOrFail(id)
+			user = await User.findOneOrFail(id)
 		} catch (id) {
 			return unauthorizedResponse(res)
 		}

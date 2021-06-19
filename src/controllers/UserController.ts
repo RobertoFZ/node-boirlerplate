@@ -1,6 +1,7 @@
 import { Request, Response, Router } from 'express'
 import express from 'express'
 import {
+	failureResponse,
 	insufficientParameters,
 	successResponse,
 } from 'modules/common/service'
@@ -9,6 +10,7 @@ import { EUserRoles } from 'types/User'
 import { validate } from 'class-validator'
 import validateJWT from 'modules/common/validateJWT'
 import validateRole from 'modules/common/validateRole'
+import { getRepository } from 'typeorm'
 
 class UserController {
 	private router: Router
@@ -29,44 +31,62 @@ class UserController {
 	}
 
 	async find(req: Request, res: Response): Promise<void> {
-		const users = await User.find()
-		return successResponse('Users list', users, res)
+		try {
+			const userRepository = getRepository(User)
+			const users = await userRepository.find()
+			return successResponse('Users list', users, res)
+		} catch (error) {
+			return failureResponse(
+				'Error while trying to create the user',
+				error,
+				res,
+			)
+		}
 	}
 
 	async create(req: Request, res: Response): Promise<void> {
 		const { firstName, lastName, email, password } = req.body
 
-		const existingUser = await User.findOne(null, { where: { email } })
-		if (existingUser) {
-			return insufficientParameters(res, 'Email already taken', {
+		try {
+			const existingUser = await User.findOne(null, { where: { email } })
+			if (existingUser) {
+				return insufficientParameters(res, 'Email already taken', {
+					email,
+				})
+			}
+
+			const userRepository = getRepository(User)
+			let user: User = userRepository.create({
+				firstName,
+				lastName,
+				password,
 				email,
 			})
-		}
 
-		const user = new User()
-		user.firstName = firstName
-		user.lastName = lastName
-		user.password = password
-		user.email = email
-		user.role = EUserRoles.user
+			//Validade if the parameters are ok
+			const errors = await validate(user)
+			if (errors.length > 0) {
+				return insufficientParameters(res, 'Validation error', errors)
+			}
+			try {
+				user.hashPassword()
+			} catch (error) {
+				return insufficientParameters(
+					res,
+					'Error while hashing your password',
+				)
+			}
+			user = await userRepository.save(user)
 
-		//Validade if the parameters are ok
-		const errors = await validate(user)
-		if (errors.length > 0) {
-			return insufficientParameters(res, 'Validation error', errors)
-		}
-		try {
-			user.hashPassword()
+			delete user.password
+			return successResponse('User created successful', user, res)
 		} catch (error) {
-			return insufficientParameters(
+			return failureResponse(
+				'Error while trying to create the user',
+				error,
 				res,
-				'Error while hashing your password',
 			)
 		}
-		await user.save()
-
-		delete user.password
-		return successResponse('User created successful', user, res)
 	}
 }
 
