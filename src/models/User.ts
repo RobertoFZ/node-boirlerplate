@@ -1,5 +1,4 @@
 import { Entity, Column } from 'typeorm'
-import { IsNotEmpty } from 'class-validator'
 import bcrypt from 'bcryptjs'
 import { EUserRoles } from 'types/User'
 import { Model } from './Model'
